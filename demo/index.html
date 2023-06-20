@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo</title>
+    <script src="../dist/svg-drawer.min.js"></script>
+  </head>
+
+  <body>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .btn {
+        cursor: pointer;
+        margin: 10px 10px 10px 0;
+        background: #6c6969;
+        color: #fff;
+        padding: 5px;
+        border-radius: 3px;
+      }
+    </style>
+    <div style="display: flex">
+      <div class="btn" onclick="start()">开始画线</div>
+      <div class="btn" onclick="reStart()">继续画线</div>
+      <div class="btn" onclick="stop1()">结束画线</div>
+      <div class="btn" onclick="clearBlank()">清除空白</div>
+      <div class="btn" onclick="getContext()">生成vnode</div>
+    </div>
+    <div id="app" class="sss"></div>
+    <script>
+      let drawer = new Drawer(document.getElementById("app"));
+      let close;
+      function start() {
+        close = drawer.drawLine({
+          autoClose: true,
+        });
+      }
+      function stop1() {
+        close();
+      }
+      function reStart() {
+        close = drawer.reStart();
+      }
+      function clearBlank() {
+        drawer.setBlank();
+      }
+      function getContext(){
+        console.log(drawer.getCanvasContext())
+      }
+    </script>
+    <!-- <svg
+      version="1.1"
+      baseProfile="full"
+      width="300"
+      height="200"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <g id="e">
+          <circle cx="80" cy="80" r="80" fill="green" />
+        </g>
+      </defs>
+      <use x="100" y="100" xlink:href="#e" />
+    </svg> -->
+    <!-- <div
+      style="
+        width: 800px;
+        height: 800px;
+        border: 1px solid;
+        position: relative;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+      "
+    >
+      <div
+        id="dom"
+        style="
+          width: 800px;
+          height: 800px;
+          background: #fbf8f8;
+          position: absolute;
+          transform-origin: 0 0;
+          left: 0;
+          right: 0;
+        "
+        onmousemove="move()"
+        onmousedown="down()"
+        onmouseup="up()"
+      >
+        asdasdas
+      </div>
+    </div>
+    <script>
+      let mDom = document.getElementById("dom");
+      let scale = 1;
+      mDom.addEventListener("mousewheel", (e) => {
+        if (e.wheelDelta > 0) {
+          scale += 0.1;
+        } else {
+          scale = scale > 0.5 ? scale - 0.1 : 0.5;
+        }
+        mDom.style.transform = `scale(${scale})`;
+      });
+      flag = false;
+      let x;
+      let y;
+      function down() {
+        x = event.offsetX * scale;
+        y = event.offsetY * scale;
+        flag = true;
+      }
+      function up() {
+        flag = false;
+      }
+      function move() {
+        if (flag) {
+          mDom.style.left = event.clientX - x + "px";
+          mDom.style.top = event.clientY - y + "px";
+        }
+      }
+    </script> -->
+  </body>
+</html>

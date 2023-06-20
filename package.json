@@ -1,0 +1,43 @@
+{
+  "name": "svg-drawer",
+  "version": "0.0.1",
+  "description": "svg构造器",
+  "main": "dist/thes.min.js",
+  "scripts": {
+    "serve": "rollup -w -c"
+  },
+  "author": "lk",
+  "license": "MIT",
+  "keywords": [
+    "thesjs",
+    "3d",
+    "ts"
+  ],
+  "files": [
+    "dist",
+    "types",
+    "LICENSE"
+  ],
+  "types": "./types/index.d.ts",
+  "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "^2.75.7",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-serve": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kunkunj/svg-drawer.git"
+  },
+  "dependencies": {
+    "rollup-plugin-typescript2": "^0.34.1"
+  }
+}
