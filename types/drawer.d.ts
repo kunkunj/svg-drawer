@@ -15,7 +15,14 @@ type LineStyleType = {
 };
 interface DrawerService {
   activeComponet: any;
-  status: "line" | "none";
+  idStore: Record<string, any> = {};
+  status: StatusType;
+  isDrag: boolean;
+  scale: number;
+  isEdit: boolean;
+  activeEidter: any;
 }
-type StatusType = "line" | "none";
+type StatusType = "line" | "none" | 'curve';
 type CommonObject = Record<string | number, any>;
+
+type TypeComponet = SVGPathElement | any

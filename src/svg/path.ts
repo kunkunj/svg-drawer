@@ -10,7 +10,10 @@ export const createPath = (
     "path"
   ) as SVGPathElement;
   path.setAttribute("stroke", lineColor);
-  path.setAttribute("stroke-width", lineColor);
+  path.setAttribute("stroke-width", lineWeight);
   path.setAttribute("fill", fill);
+  path.onmousedown = () => {
+    
+  }
   return path;
 };

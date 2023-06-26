@@ -25,6 +25,7 @@
     </style>
     <div style="display: flex">
       <div class="btn" onclick="start()">开始画线</div>
+      <div class="btn" onclick="start1()">开始画曲线</div>
       <div class="btn" onclick="reStart()">继续画线</div>
       <div class="btn" onclick="stop1()">结束画线</div>
       <div class="btn" onclick="clearBlank()">清除空白</div>
@@ -36,6 +37,11 @@
       let close;
       function start() {
         close = drawer.drawLine({
+          autoClose: true,
+        });
+      }
+      function start1() {
+        close = drawer.drawCurve({
           autoClose: true,
         });
       }

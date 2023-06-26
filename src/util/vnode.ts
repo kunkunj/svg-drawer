@@ -1,4 +1,6 @@
-export const createVnode = function <T>(
+import { DEFAULT_SVGNS } from "../constant/index";
+
+export const createVnode = function (
   list: Array<HTMLElement>,
   reduce: number,
   dw: DrawerService
@@ -20,4 +22,16 @@ export const createVnode = function <T>(
     arr.push(obj);
   }
   return arr;
+};
+export const complairVnode = function (
+  vnode: Array<Record<string, any>>,
+  parent: SVGGElement
+) {
+  for (let index = 0; index < vnode.length; index++) {
+    const element = vnode[index];
+    let dom = document.createElementNS(DEFAULT_SVGNS, element.tagName);
+    dom.attributes = element.attributes;
+    dom.dataset = element.dataset;
+    parent.appendChild(dom);
+  }
 };

@@ -9,5 +9,10 @@ export const DEFAULT_SVGNS = "http://www.w3.org/2000/svg";
 export const SVG_PATH_DIRECTION = {
   L: "L",
   M: "M",
-  Q: "!",
+  Q: "Q",
 };
+export enum SVG_TYPE {
+  line = "L",
+  curve = "Q",
+  none = "none"
+}
