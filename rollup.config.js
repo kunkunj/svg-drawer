@@ -26,7 +26,7 @@ export default [
       }),
       resolve(),
       commonjs(),
-      terser(),
+      // terser(),
       typescript(),
       serve({
         open: true,

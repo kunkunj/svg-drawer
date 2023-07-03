@@ -21,8 +21,12 @@ interface DrawerService {
   scale: number;
   isEdit: boolean;
   activeEidter: any;
+  pointList: Array<CommonObject>
+  isDrawBypoint: CircleService & RectService | null;
+  _removePoint(): void;
+  _addPoint(dw:DrawerService):void
 }
-type StatusType = "line" | "none" | 'curve';
+type StatusType = "line" | "none" | "curve";
 type CommonObject = Record<string | number, any>;
 
-type TypeComponet = SVGPathElement | any
+type TypeComponet = SVGPathElement | any;

@@ -1,8 +1,8 @@
 import { setComponet } from "../core/drawer";
 
 export const addEvent = (el: any, dw: DrawerService) => {
-  el.style.cursor = "pointer";
-  el.onclick = function () {
+  el.el.style.cursor = "pointer";
+  el.el.onclick = function () {
     if (dw.status == "none") {
       dw.activeComponet = el;
     }
@@ -53,11 +53,10 @@ export const pointOffset = (point:Array<CommonObject>,offsetObj:CommonObject) =>
 }
 
 export const addDragEvent = (com: TypeComponet) => {
-  com.onmousedown = () => {
-    console.log(com)
+  com.el.onmousedown = () => {
     setComponet(com)
   }
-  com.onmouseup = () => {
+  com.el.onmouseup = () => {
     setComponet(null)
   }
 }

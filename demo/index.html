@@ -22,8 +22,12 @@
         padding: 5px;
         border-radius: 3px;
       }
+      .sss{
+        margin: 100px;
+      }
     </style>
     <div style="display: flex">
+      <div class="btn" onclick="drawRect()">开始画矩形</div>
       <div class="btn" onclick="start()">开始画线</div>
       <div class="btn" onclick="start1()">开始画曲线</div>
       <div class="btn" onclick="reStart()">继续画线</div>
@@ -56,6 +60,9 @@
       }
       function getContext(){
         console.log(drawer.getCanvasContext())
+      }
+      function drawRect(){
+        drawer.drawRect()
       }
     </script>
     <!-- <svg

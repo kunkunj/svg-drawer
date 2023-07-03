@@ -14,5 +14,5 @@ export const SVG_PATH_DIRECTION = {
 export enum SVG_TYPE {
   line = "L",
   curve = "Q",
-  none = "none"
+  none = "none",
 }
