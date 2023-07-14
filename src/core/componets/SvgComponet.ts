@@ -7,6 +7,7 @@ export class SvgComponet {
   lineWeight: number = 1;
   isVnodeComponet = true;
   activeColor: string = "";
+  img: SVGImageElement | undefined;
   constructor(option: any, dw: DrawerService) {
     this.lineColor = option.lineColor || "#000";
     this.lineWeight = option.lineWeight || 1;
@@ -34,5 +35,24 @@ export class SvgComponet {
     this.activeColor = color;
     this.el.setAttribute("stroke", color);
   }
-  
+  motionByLine(
+    list: any,
+    options: { dur?: number; repeatCount?: string } = {}
+  ) {
+    this.x = 0;
+    this.y = 0;
+    this.draw("p");
+    this.el.innerHTML = `<animateMotion dur="${
+      options.dur || 5
+    }s" repeatCount="${
+      options.repeatCount || "indefinite"
+    }" path="${list.getPath()}"></animateMotion>`;
+    if (this.img) {
+      this.img.innerHTML = `<animateMotion dur="${
+        options.dur || 5
+      }s" repeatCount="${
+        options.repeatCount || "indefinite"
+      }" path="${list.getPath()}"></animateMotion>`;
+    }
+  }
 }

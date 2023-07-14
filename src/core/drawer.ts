@@ -21,6 +21,7 @@ import {
   pointOffset,
 } from "../util/utils";
 import { complairVnode, createVnode } from "../util/vnode";
+import { Ellipse } from "./componets/Ellipse";
 import { Path } from "./componets/Path";
 import { Rect } from "./componets/Rect";
 export let activeComponet: any = null;
@@ -68,19 +69,22 @@ export class Drawer implements DrawerService {
       const isSelect = !!this.children.find(
         (item: ComponetChild) => item.id === val.id
       );
-      if (isSelect && this._ActiveComponet) {
-        this._ActiveComponet.setTheme();
+      if (isSelect) {
+        if (this._ActiveComponet) {
+          this._ActiveComponet.setTheme();
+        }
+        this._ActiveComponet.activeColor = this._ActiveComponet.lineColor;
         this._ActiveComponet = val;
+        val.setActive(this.activeColor);
         activeComponet = val;
       }
       if (!isSelect) {
         this._ActiveComponet = val;
       }
-      val.setActive(this.activeColor);
       this._addPoint(val);
     } else {
       this._removePoint();
-      this._ActiveComponet.setTheme({ color: val });
+      this._ActiveComponet?.setTheme({ color: val });
       this._ActiveComponet.activeColor = val;
     }
   }
@@ -160,6 +164,9 @@ export class Drawer implements DrawerService {
   }
   reStart(path?: HTMLElement) {
     const com = path || this.activeComponet;
+    if (!com) {
+      return
+    }
     com.setAttribute("stroke", this.activeColor);
     this.status = com.type as StatusType;
     return () => {
@@ -169,7 +176,7 @@ export class Drawer implements DrawerService {
     };
   }
   getCanvasContext() {
-    return createVnode(this.children, 2, this);
+    return createVnode(this.children,this);
   }
   setCanvasContext(vnode: Array<Record<string | number, any>>) {
     let g = document.createElementNS(DEFAULT_SVGNS, "g");
@@ -180,11 +187,11 @@ export class Drawer implements DrawerService {
     // return complairVnode(vnode, g);
   }
   _addPoint(path: CommonObject) {
+    
     const id = path.id as string;
     if (this.idStore[id] && this.idStore[id].point.length) {
       let point = this.idStore[id].point;
       this._removePoint();
-      console.log(path.type)
       if (["curve", "line"].includes(path.type)) {
         let eql =
           point[0].x == point[point.length - 1].x &&
@@ -232,7 +239,7 @@ export class Drawer implements DrawerService {
           }
         }
       }
-      if (path.type == "rect") {
+      if (["rect", "ellipse"].includes(path.type)) {
         for (let index = 0; index < point.length; index++) {
           const element = point[index];
           let circle: any = new Circle(
@@ -245,8 +252,9 @@ export class Drawer implements DrawerService {
             },
             this
           );
+          circle.id = element.id ? element.id : index + 1;
           circle.t = element.t;
-          circle.type = "rect";
+          circle.type = path.type;
           this.canvas?.appendChild(circle.el as SVGPathElement);
           this.pointList[index] = circle;
         }
@@ -319,6 +327,7 @@ export class Drawer implements DrawerService {
     this.clearLast();
     this._removePoint();
     const path = new Path(lineStyle, this);
+    path.options = lineStyle
     path.type = "line";
     this.activeComponet = path;
     this.idStore[path.id] = {
@@ -339,6 +348,7 @@ export class Drawer implements DrawerService {
   }
   drawRect(lineStyle: LineStyleType = {}) {
     const rect = new Rect(lineStyle, this);
+    rect.options = lineStyle
     rect.type = "rect";
     rect.isEdit = true;
     this.activeComponet = rect;
@@ -353,6 +363,23 @@ export class Drawer implements DrawerService {
     this.canvas?.appendChild(rect.el as SVGPathElement);
     return rect;
   }
+  drawEllipse(lineStyle: LineStyleType = {}) {
+    const ellipse = new Ellipse(lineStyle, this);
+    ellipse.options = lineStyle
+    ellipse.type = "ellipse";
+    ellipse.isEdit = true;
+    this.activeComponet = ellipse;
+    this.idStore[ellipse.id] = {
+      type: "ellipse",
+      lineStyle: lineStyle,
+      point: [],
+    };
+    addEvent(ellipse, this);
+    addDragEvent(ellipse);
+    this.children.push(ellipse);
+    this.canvas?.appendChild(ellipse.el as SVGPathElement);
+    return ellipse;
+  }
   drawCurve(lineStyle: LineStyleType = {}) {
     if (this.status == "curve") {
       this._closeFn();
@@ -361,6 +388,7 @@ export class Drawer implements DrawerService {
     this.clearLast();
     this._removePoint();
     const path = new Path(lineStyle, this);
+    path.options = lineStyle
     path.type = "curve";
     this.activeComponet = path;
     this.idStore[path.id] = {

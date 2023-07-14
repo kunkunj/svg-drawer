@@ -11,6 +11,7 @@ export class Circle {
   fill: string;
   flag: boolean = false;
   el: any = null;
+  t: string = "";
   constructor(option: any, dw?: any) {
     this.r = option.r || 2;
     this.lineColor = option.lineColor || "#000";
@@ -22,7 +23,7 @@ export class Circle {
     this.el.style.cursor = "n-resize";
     this.el.onmousedown = (event: MouseEvent) => {
       dw.isEdit = true;
-      dw.activeEidter = this
+      dw.activeEidter = this;
     };
     this.el.onmouseup = (e: MouseEvent) => {
       dw.isEdit = false;

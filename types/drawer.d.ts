@@ -22,7 +22,7 @@ interface DrawerService {
   isEdit: boolean;
   activeEidter: any;
   pointList: Array<CommonObject>
-  isDrawBypoint: CircleService & RectService | null;
+  isDrawBypoint: CircleService & RectService & EllipseService | null;
   _removePoint(): void;
   _addPoint(dw:DrawerService):void
 }

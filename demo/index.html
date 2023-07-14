@@ -22,12 +22,15 @@
         padding: 5px;
         border-radius: 3px;
       }
-      .sss{
-        margin: 100px;
+      .sss {
+        margin: 80px;
       }
     </style>
     <div style="display: flex">
       <div class="btn" onclick="drawRect()">开始画矩形</div>
+      <div class="btn" onclick="setimage()">加图片</div>
+      <div class="btn" onclick="motion()">运动</div>
+      <div class="btn" onclick="drawEll()">开始画路径</div>
       <div class="btn" onclick="start()">开始画线</div>
       <div class="btn" onclick="start1()">开始画曲线</div>
       <div class="btn" onclick="reStart()">继续画线</div>
@@ -37,8 +40,11 @@
     </div>
     <div id="app" class="sss"></div>
     <script>
-      let drawer = new Drawer(document.getElementById("app"));
-      let close;
+      let drawer = new Drawer(document.getElementById("app"), {
+        width: 1000,
+        height: 700,
+      });
+      let close, path;
       function start() {
         close = drawer.drawLine({
           autoClose: true,
@@ -50,7 +56,7 @@
         });
       }
       function stop1() {
-        close();
+        path = close();
       }
       function reStart() {
         close = drawer.reStart();
@@ -58,84 +64,26 @@
       function clearBlank() {
         drawer.setBlank();
       }
-      function getContext(){
-        console.log(drawer.getCanvasContext())
+      function getContext() {
+        console.log(drawer.getCanvasContext());
       }
-      function drawRect(){
-        drawer.drawRect()
+      let rect = null;
+      function drawRect() {
+        rect = drawer.drawRect();
+      }
+      function drawEll() {
+        // path = drawer.drawEllipse();
+        path = drawer.drawRect({rx:50,ry:50});
+      }
+      function motion() {
+        rect.motionByLine(path);
+      }
+      function setimage() {
+        rect.setImage(
+          "http://img.daimg.com/uploads/allimg/200630/1-200630154924.jpg",
+          "none"
+        );
       }
     </script>
-    <!-- <svg
-      version="1.1"
-      baseProfile="full"
-      width="300"
-      height="200"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <g id="e">
-          <circle cx="80" cy="80" r="80" fill="green" />
-        </g>
-      </defs>
-      <use x="100" y="100" xlink:href="#e" />
-    </svg> -->
-    <!-- <div
-      style="
-        width: 800px;
-        height: 800px;
-        border: 1px solid;
-        position: relative;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-      "
-    >
-      <div
-        id="dom"
-        style="
-          width: 800px;
-          height: 800px;
-          background: #fbf8f8;
-          position: absolute;
-          transform-origin: 0 0;
-          left: 0;
-          right: 0;
-        "
-        onmousemove="move()"
-        onmousedown="down()"
-        onmouseup="up()"
-      >
-        asdasdas
-      </div>
-    </div>
-    <script>
-      let mDom = document.getElementById("dom");
-      let scale = 1;
-      mDom.addEventListener("mousewheel", (e) => {
-        if (e.wheelDelta > 0) {
-          scale += 0.1;
-        } else {
-          scale = scale > 0.5 ? scale - 0.1 : 0.5;
-        }
-        mDom.style.transform = `scale(${scale})`;
-      });
-      flag = false;
-      let x;
-      let y;
-      function down() {
-        x = event.offsetX * scale;
-        y = event.offsetY * scale;
-        flag = true;
-      }
-      function up() {
-        flag = false;
-      }
-      function move() {
-        if (flag) {
-          mDom.style.left = event.clientX - x + "px";
-          mDom.style.top = event.clientY - y + "px";
-        }
-      }
-    </script> -->
   </body>
 </html>

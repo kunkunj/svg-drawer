@@ -14,8 +14,19 @@ interface RectService {
   id: string;
   width: number;
   height: number;
+  options:LineStyleType
   startDrawPosition(position: Position);
   moveDrawPosition(width: number, height: number);
 }
 
-type ComponetChild = any
+interface EllipseService {
+  type: string;
+  isEdit: boolean;
+  width: number;
+  height: number;
+  options: LineStyleType;
+  startDrawPosition(position: Position);
+  moveDrawPosition(width: number, height: number);
+}
+
+type ComponetChild = any;

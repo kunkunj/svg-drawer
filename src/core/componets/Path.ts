@@ -7,6 +7,7 @@ export class Path extends SvgComponet {
   dataset: any = {};
   point: string = "";
   type: string = "";
+  options: LineStyleType = {};
   constructor(lineStyle: any, dw: DrawerService) {
     super(lineStyle, dw);
     this.el = createPath(
@@ -15,6 +16,7 @@ export class Path extends SvgComponet {
       lineStyle.fill ? (lineStyle.fill as string) : "transparent"
     );
     this.id = "l" + Date.now();
+    this.el.setAttribute("id", this.id);
     this.draw("all");
   }
   setPoint(point: string) {
@@ -26,7 +28,7 @@ export class Path extends SvgComponet {
       this.el.setAttribute("d", this.point);
     }
     if (type == "all" || type == "t") {
-      this.el.setAttribute("stroke", this.activeColor || this.lineColor);
+      this.el.setAttribute("stroke", this.lineColor);
       this.el.setAttribute("stroke-width", this.lineWeight);
       this.el.setAttribute("fill", this.fill);
     }

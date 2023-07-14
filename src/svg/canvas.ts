@@ -1,5 +1,5 @@
 import { activeComponet, clickComponet } from "../core/drawer";
-import { montageOffset, pointOffset } from "../util/utils";
+import { countPoint, montageOffset, pointOffset } from "../util/utils";
 import { createSvgTag } from "./svg";
 
 export const initCanvas = (
@@ -56,28 +56,7 @@ function initDrag(mSvg: SVGElement, parent: HTMLElement, dw: DrawerService) {
   function up(event: MouseEvent) {
     dw.isEdit = false;
     flag = false;
-    dw.isDrawBypoint && (dw.isDrawBypoint.isEdit = false);
-    if (dw.isDrawBypoint) {
-      console.log(dw.isDrawBypoint.id);
-      dw.idStore[dw.isDrawBypoint.id].point = [
-        { x: dw.isDrawBypoint.x, y: dw.isDrawBypoint.y, t: "lt" },
-        {
-          x: dw.isDrawBypoint.x + dw.isDrawBypoint.width,
-          y: dw.isDrawBypoint.y,
-          t: "rt",
-        },
-        {
-          x: dw.isDrawBypoint.x + dw.isDrawBypoint.width,
-          y: dw.isDrawBypoint.y + dw.isDrawBypoint.height,
-          t: "rb",
-        },
-        {
-          x: dw.isDrawBypoint.x,
-          y: dw.isDrawBypoint.y + dw.isDrawBypoint.height,
-          t: "lb",
-        },
-      ];
-    }
+    setEditPoint(dw, dw.isDrawBypoint?.type);
     dw.isDrawBypoint = null;
   }
   mSvg.addEventListener("mousewheel", moueScale as any);
@@ -128,6 +107,15 @@ function initDrag(mSvg: SVGElement, parent: HTMLElement, dw: DrawerService) {
     ) {
       dw.isDrawBypoint.moveDrawPosition(-offset.x, -offset.y);
     }
+    if (
+      dw.isDrawBypoint &&
+      !keyDown &&
+      flag &&
+      dw.isDrawBypoint.type == "ellipse" &&
+      dw.isDrawBypoint.isEdit
+    ) {
+      dw.isDrawBypoint.moveDrawPosition(-offset.x, -offset.y);
+    }
     if (dw.isEdit && !keyDown && !dw.isDrawBypoint) {
       if (
         dw.idStore[dw.activeComponet.id] &&
@@ -139,6 +127,14 @@ function initDrag(mSvg: SVGElement, parent: HTMLElement, dw: DrawerService) {
       }
       if (dw.idStore[dw.activeComponet.id] && dw.activeEidter.type == "rect") {
         resetRect(dw, offset);
+        dx = event.clientX;
+        dy = event.clientY;
+      }
+      if (
+        dw.idStore[dw.activeComponet.id] &&
+        dw.activeEidter.type == "ellipse"
+      ) {
+        resetEllipse(dw, offset);
         dx = event.clientX;
         dy = event.clientY;
       }
@@ -163,6 +159,12 @@ function initDrag(mSvg: SVGElement, parent: HTMLElement, dw: DrawerService) {
         dw.idStore[clickComponet.com.id].point,
         offset
       );
+      if (clickComponet.com.type == "ellipse") {
+        clickComponet.com.setPoint(offset);
+        dx = event.clientX;
+        dy = event.clientY;
+        return;
+      }
       if (clickComponet.com.type == "rect") {
         clickComponet.com.setPoint(offset);
         dx = event.clientX;
@@ -220,22 +222,124 @@ function resetPath(dw: DrawerService, offset: Position) {
     montageOffset(dw.idStore[dw.activeComponet.id].point)
   );
 }
-function resetRect(dw: DrawerService, offset: Position) {
+function resetEllipse(dw: DrawerService, offset: Position) {
+  dw._removePoint();
+  dw._addPoint(dw.activeComponet);
+  reSetPoint(dw);
+  dw.activeComponet.setPoint(offset, dw.activeEidter.t);
   if (dw.activeEidter.t == "lt") {
-    // dw.activeComponet.setPoint(offset);
-    // dw.activeComponet.moveDrawPosition(offset.x, offset.y);
-    dw.idStore[dw.activeComponet.id].point[0].x = dw.activeComponet.x;
-    dw.idStore[dw.activeComponet.id].point[0].y = dw.activeComponet.y;
-    dw.idStore[dw.activeComponet.id].point[1].x =
-      dw.activeComponet.x + dw.activeComponet.width;
-    dw.idStore[dw.activeComponet.id].point[1].y = dw.activeComponet.y;
-    dw.idStore[dw.activeComponet.id].point[3].y =
-      dw.activeComponet.y + dw.activeComponet.height;
-    dw.idStore[dw.activeComponet.id].point[3].x = dw.activeComponet.x;
-    dw._removePoint();
-    dw._addPoint(dw.activeComponet);
+    dw.activeComponet.moveDrawPosition(offset.x, 0);
+  } else if (dw.activeEidter.t == "rt") {
+    dw.activeComponet.moveDrawPosition(0, offset.y);
+  } else if (dw.activeEidter.t == "rb") {
+    dw.activeComponet.moveDrawPosition(-offset.x, 0);
+  } else if (dw.activeEidter.t == "lb") {
+    dw.activeComponet.moveDrawPosition(0, -offset.y);
   }
+  dw.idStore[dw.activeComponet.id].point[0].x =
+    dw.activeComponet.x + dw.activeComponet.width / 2;
+  dw.idStore[dw.activeComponet.id].point[0].y = dw.activeComponet.y;
+  dw.idStore[dw.activeComponet.id].point[1].x = dw.activeComponet.x;
+  dw.idStore[dw.activeComponet.id].point[1].y =
+    dw.activeComponet.y + dw.activeComponet.height / 2;
+  dw.idStore[dw.activeComponet.id].point[2].x =
+    dw.activeComponet.x + dw.activeComponet.width;
+  dw.idStore[dw.activeComponet.id].point[2].y =
+    dw.activeComponet.y+ dw.activeComponet.height / 2;
+  dw.idStore[dw.activeComponet.id].point[3].y =
+    dw.activeComponet.y + dw.activeComponet.height;
+  dw.idStore[dw.activeComponet.id].point[3].x = dw.activeComponet.x + dw.activeComponet.width / 2;
 }
-function getRectByPoint(points:any,pointIndex:number) {
-  
+function resetRect(dw: DrawerService, offset: Position) {
+  dw._removePoint();
+  dw._addPoint(dw.activeComponet);
+  reSetPoint(dw);
+  dw.activeComponet.setPoint(offset, dw.activeEidter.t);
+  if (dw.activeEidter.t == "lt") {
+    dw.activeComponet.moveDrawPosition(offset.x, offset.y);
+  } else if (dw.activeEidter.t == "rt") {
+    dw.activeComponet.moveDrawPosition(-offset.x, offset.y);
+  } else if (dw.activeEidter.t == "rb") {
+    dw.activeComponet.moveDrawPosition(-offset.x, -offset.y);
+  } else if (dw.activeEidter.t == "lb") {
+    dw.activeComponet.moveDrawPosition(offset.x, -offset.y);
+  }
+  dw.idStore[dw.activeComponet.id].point[0].x = dw.activeComponet.x;
+  dw.idStore[dw.activeComponet.id].point[0].y = dw.activeComponet.y;
+  dw.idStore[dw.activeComponet.id].point[1].x =
+    dw.activeComponet.x + dw.activeComponet.width;
+  dw.idStore[dw.activeComponet.id].point[1].y = dw.activeComponet.y;
+  dw.idStore[dw.activeComponet.id].point[2].x =
+    dw.activeComponet.x + dw.activeComponet.width;
+  dw.idStore[dw.activeComponet.id].point[2].y =
+    dw.activeComponet.y + dw.activeComponet.height;
+  dw.idStore[dw.activeComponet.id].point[3].y =
+    dw.activeComponet.y + dw.activeComponet.height;
+  dw.idStore[dw.activeComponet.id].point[3].x = dw.activeComponet.x;
+}
+function reSetPoint(dw: DrawerService) {
+  dw.idStore[dw.activeComponet.id].point = countPoint(dw);
+  dw.idStore[dw.activeComponet.id].point[0].t = "lt";
+  dw.idStore[dw.activeComponet.id].point[1].t = "rt";
+  dw.idStore[dw.activeComponet.id].point[2].t = "rb";
+  dw.idStore[dw.activeComponet.id].point[3].t = "lb";
+  const currentEditer = dw.idStore[dw.activeComponet.id].point.findIndex(
+    (item: CommonObject) => item.id == dw.activeEidter.id
+  );
+  dw.activeEidter.t = dw.idStore[dw.activeComponet.id].point[currentEditer].t;
+}
+function setEditPoint(dw: DrawerService, type: string | undefined) {
+  if (dw.isDrawBypoint && type == "rect") {
+    dw.isDrawBypoint && (dw.isDrawBypoint.isEdit = false);
+    dw.idStore[dw.isDrawBypoint.id].point = [
+      { x: dw.isDrawBypoint.x, y: dw.isDrawBypoint.y, t: "lt", id: 1 },
+      {
+        x: dw.isDrawBypoint.x + dw.isDrawBypoint.width,
+        y: dw.isDrawBypoint.y,
+        t: "rt",
+        id: 2,
+      },
+      {
+        x: dw.isDrawBypoint.x + dw.isDrawBypoint.width,
+        y: dw.isDrawBypoint.y + dw.isDrawBypoint.height,
+        t: "rb",
+        id: 3,
+      },
+      {
+        x: dw.isDrawBypoint.x,
+        y: dw.isDrawBypoint.y + dw.isDrawBypoint.height,
+        t: "lb",
+        id: 4,
+      },
+    ];
+  }
+  if (dw.isDrawBypoint && type == "ellipse") {
+    dw.isDrawBypoint && (dw.isDrawBypoint.isEdit = false);
+    dw.idStore[dw.isDrawBypoint.id].point = [
+      {
+        x: dw.isDrawBypoint.x + dw.isDrawBypoint.width / 2,
+        y: dw.isDrawBypoint.y,
+        t: "lt",
+        id: 1,
+      },
+      {
+        x: dw.isDrawBypoint.x,
+        y: dw.isDrawBypoint.y + dw.isDrawBypoint.height / 2,
+        t: "rt",
+        id: 2,
+      },
+      {
+        x: dw.isDrawBypoint.x + dw.isDrawBypoint.width,
+        y: dw.isDrawBypoint.y + dw.isDrawBypoint.height / 2,
+        t: "rb",
+        id: 3,
+      },
+      {
+        x: dw.isDrawBypoint.x + dw.isDrawBypoint.width / 2,
+        y: dw.isDrawBypoint.y + dw.isDrawBypoint.height,
+        t: "lb",
+        id: 4,
+      },
+    ];
+  }
 }
