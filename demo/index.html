@@ -31,6 +31,7 @@
       <div class="btn" onclick="setimage()">加图片</div>
       <div class="btn" onclick="motion()">运动</div>
       <div class="btn" onclick="drawEll()">开始画路径</div>
+      <div class="btn" onclick="drawEll1()">开始画椭圆</div>
       <div class="btn" onclick="start()">开始画线</div>
       <div class="btn" onclick="start1()">开始画曲线</div>
       <div class="btn" onclick="reStart()">继续画线</div>
@@ -70,6 +71,10 @@
       let rect = null;
       function drawRect() {
         rect = drawer.drawRect();
+      }
+      function drawEll1() {
+        path = drawer.drawEllipse();
+        // path = drawer.drawRect({rx:50,ry:50});
       }
       function drawEll() {
         // path = drawer.drawEllipse();
