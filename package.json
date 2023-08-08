@@ -9,9 +9,9 @@
   "author": "lk",
   "license": "MIT",
   "keywords": [
-    "thesjs",
-    "3d",
-    "ts"
+    "svg",
+    "drawer",
+    "画板"
   ],
   "files": [
     "dist",

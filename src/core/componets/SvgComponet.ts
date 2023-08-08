@@ -4,6 +4,7 @@ export class SvgComponet {
   el: any = null;
   lineColor: string = "#000";
   fill: string = "#000";
+  point: any;
   lineWeight: number = 1;
   isVnodeComponet = true;
   activeColor: string = "";
@@ -34,6 +35,9 @@ export class SvgComponet {
   setActive(color: string) {
     this.activeColor = color;
     this.el.setAttribute("stroke", color);
+  }
+  getPath() {
+    return this.point
   }
   motionByLine(
     list: any,

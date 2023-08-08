@@ -30,3 +30,8 @@ interface EllipseService {
 }
 
 type ComponetChild = any;
+
+type GroupOptionType = {
+  show: boolean;
+  list:any[]
+}
