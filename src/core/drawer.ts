@@ -36,10 +36,10 @@ export class Drawer implements DrawerService {
   isDrawBypoint: any;
   cache: number;
   multiple: number;
-  canvas?: SVGElement;
+  canvas: SVGElement;
   scale: number = 1;
   isEdit: boolean = false;
-  group?: HTMLElement | null;
+  group: SVGDefsElement;
   dev: boolean = true;
   extremePoints: Array<any> = [];
   children: Array<any> = [];
@@ -96,12 +96,10 @@ export class Drawer implements DrawerService {
     this.height = option?.height || DEFAULT_SIZE;
     this.cache = option?.cache || DEFAULT_CACHE;
     this.multiple = option?.multiple || DEFAULT_MULTIPLE;
+    this.group = document.createElementNS(DEFAULT_SVGNS, "defs");
+    this.group.setAttribute("id", 'defs' + Date.now())
     this._DOM = el;
     this.status = "none";
-    this.init();
-    initCache(this.cache);
-  }
-  private init() {
     this.canvas = initCanvas(
       this._DOM,
       this.width,
@@ -109,7 +107,11 @@ export class Drawer implements DrawerService {
       this.multiple,
       this
     );
-    this.group = document.getElementById("defs");
+    this.init();
+    initCache(this.cache);
+  }
+  private init() {
+    this.canvas.appendChild(this.group)
     this.canvas.onclick = (e: MouseEvent) => {
       if (this.status == "line") {
         let point = this.activeComponet.point;
@@ -318,6 +320,12 @@ export class Drawer implements DrawerService {
     }
     this._filterData();
     this.activeComponet = this.activeComponet.lineColor || "#000";
+  }
+  groupElement(list:Array<any>) {
+    console.log(list)
+    if (arguments) {
+      
+    }
   }
   drawLine(lineStyle: LineStyleType = {}) {
     if (this.status == "line") {

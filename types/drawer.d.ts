@@ -19,10 +19,12 @@ interface DrawerService {
   status: StatusType;
   isDrag: boolean;
   scale: number;
+  canvas: SVGElement;
   isEdit: boolean;
   activeEidter: any;
   pointList: Array<CommonObject>
   isDrawBypoint: CircleService & RectService & EllipseService | null;
+  group: SVGDefsElement;
   _removePoint(): void;
   _addPoint(dw:DrawerService):void
 }

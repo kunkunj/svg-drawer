@@ -27,6 +27,7 @@ export class SvgComponet {
     this.fill = theme?.fill || this.fill;
     this.draw("t");
   }
+  clone() {}
   setPosition(x: number, y: number) {
     this.x = x;
     this.y = y;

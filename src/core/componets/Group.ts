@@ -1,4 +1,5 @@
 import { DEFAULT_SVGNS } from "../../constant/index";
+import { minPoint } from "../../util/utils";
 import { SvgComponet } from "./SvgComponet";
 
 export class Group extends SvgComponet {
@@ -6,16 +7,24 @@ export class Group extends SvgComponet {
   el: any = null;
   g: any = null;
   id: string = "";
-  constructor(opt: GroupOptionType & GroupOptionType,dw:DrawerService) {
+  constructor(opt: GroupOptionType, dw: DrawerService) {
     super(opt, dw);
-    if (opt.list) {
-      this.initChildren(opt.list);
+    if (!opt.list) {
+      console.error("options.list must be a componets array");
+      return;
     }
+    this.initChildren(opt.list);
     this.el = document.createElementNS(DEFAULT_SVGNS, "use");
     this.g = document.createElementNS(DEFAULT_SVGNS, "g");
     this.el.setAttribute("id", "use" + Date.now());
     this.g.setAttribute("id", "g" + Date.now());
+    dw.group.appendChild(this.g);
+    dw.canvas.appendChild(this.el);
     this.id = "g" + Date.now();
+    const { x, y } = minPoint(opt.list);
+    this.x = x;
+    this.y = y;
+    this.draw('all')
   }
   initChildren(list: CommonObject[]) {
     this.children = list;
@@ -32,11 +41,6 @@ export class Group extends SvgComponet {
     if (type == "all" || type == "p") {
       this.el.setAttribute("x", this.x);
       this.el.setAttribute("y", this.y);
-    }
-    if (type == "all" || type == "t") {
-      this.el.setAttribute("stroke", this.lineColor);
-      this.el.setAttribute("stroke-width", this.lineWeight);
-      this.el.setAttribute("fill", this.fill);
     }
   }
   append(child: any) {

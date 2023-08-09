@@ -38,9 +38,11 @@
       <div class="btn" onclick="stop1()">结束画线</div>
       <div class="btn" onclick="clearBlank()">清除空白</div>
       <div class="btn" onclick="getContext()">生成vnode</div>
+      <div class="btn" onclick="groupElement()">分组</div>
     </div>
     <div id="app" class="sss"></div>
     <script>
+      let list = []
       let drawer = new Drawer(document.getElementById("app"), {
         width: 1000,
         height: 700,
@@ -50,11 +52,13 @@
         close = drawer.drawLine({
           autoClose: true,
         });
+        list.push(close)
       }
       function start1() {
         close = drawer.drawCurve({
           autoClose: true,
         });
+        list.push(close)
       }
       function stop1() {
         path = close();
@@ -71,14 +75,17 @@
       let rect = null;
       function drawRect() {
         rect = drawer.drawRect();
+        list.push(rect)
       }
       function drawEll1() {
         path = drawer.drawEllipse();
+        list.push(path)
         // path = drawer.drawRect({rx:50,ry:50});
       }
       function drawEll() {
         // path = drawer.drawEllipse();
         path = drawer.drawRect({rx:50,ry:50});
+        list.push(path)
       }
       function motion() {
         console.log(path)
@@ -89,6 +96,9 @@
           "http://img.daimg.com/uploads/allimg/200630/1-200630154924.jpg",
           "none"
         );
+      }
+      function groupElement(){
+        drawer.groupElement(list)
       }
     </script>
   </body>
